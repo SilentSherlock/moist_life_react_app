@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from "axios";
+import RequestAPI from "../../public/api/silentGooseBot/requestAPI";
 
 export default function LoginPage() {
     const [username, setUsername] = useState('');
@@ -11,11 +13,9 @@ export default function LoginPage() {
     const handleLogin = (e) => {
         e.preventDefault();
         // 简单的登录逻辑
-        if (username === 'user' && password === 'password') {
-            localStorage.setItem('authenticated', 'true');
-            router.push('/main');
-        } else {
-            alert('用户名或密码错误');
+        if (username && password) {
+            let request = new RequestAPI();
+            request.get()
         }
     };
 
