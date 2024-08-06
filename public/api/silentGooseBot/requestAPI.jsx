@@ -38,9 +38,11 @@ export default class RequestAPI extends Component{
 
     async post(url, data) {
         try {
+            this.state.client.setContentType("application/json");
             let response = await this.state.client.post(url, data);
             if (response.status === 200) {
                 console.log("Post Success");
+                return response.data;
             } else {
                 console.log("Post Error %S", response.status);
             }

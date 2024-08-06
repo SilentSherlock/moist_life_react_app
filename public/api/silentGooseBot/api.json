@@ -1,4 +1,5 @@
 {
   "botStart": "/botStart",
-  "appStart": "/appStart"
+  "appStart": "/appStart",
+  "login": "/login"
 }
