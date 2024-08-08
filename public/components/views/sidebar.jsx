@@ -1,6 +1,15 @@
 // components/Sidebar.js
 import * as React from 'react';
-import {Drawer, LinearProgress, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from '@mui/material';
+import {
+    Divider,
+    Drawer,
+    LinearProgress,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonIcon from '@mui/icons-material/Person';
@@ -58,7 +67,7 @@ const Sidebar = () => {
                                       color: 'lightgray'
                                   }} />
                 </SidebarItem>
-                <LinearProgress/>
+                <Divider sx={{ borderColor: 'lightgray', width:'90%', margin: "10px auto" }}/>
                 <SidebarItem
                     onClick={(event) => handleListItemClick(event, 0)}
                 >
