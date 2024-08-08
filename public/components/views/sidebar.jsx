@@ -81,7 +81,7 @@ const Sidebar = () => {
                 >
                     <ListItemButton selected={selectedIndex === 1}>
                         <ListItemIcon><PersonIcon style={{ color: selectedIndex === 1 ? '#282c34' : '#ffffff' }} /></ListItemIcon>
-                        <ListItemText primary="User Profile" />
+                        <ListItemText primary="Telegram 用户" />
                     </ListItemButton>
 
                 </SidebarItem>
@@ -90,7 +90,7 @@ const Sidebar = () => {
                 >
                     <ListItemButton selected={selectedIndex === 2}>
                         <ListItemIcon><TableChartIcon style={{ color: selectedIndex === 2 ? '#282c34' : '#ffffff' }} /></ListItemIcon>
-                        <ListItemText primary="Table List" />
+                        <ListItemText primary="Telegram 机器人" />
                     </ListItemButton>
                 </SidebarItem>
             </List>
