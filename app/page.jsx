@@ -3,7 +3,7 @@ import {useRouter} from "next/navigation";
 import {useEffect} from "react";
 import {Box, Container, Grid, Paper, styled, Typography} from "@mui/material";
 import Sidebar from "../public/components/views/sidebar";
-import Content from "../public/components/views/content";
+import Page from "./content/botManage/page";
 
 function HomePage() {
 
@@ -28,7 +28,7 @@ function HomePage() {
             <Box sx={{ display: 'flex' }}>
                 <Sidebar />
                 <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-                    <Content />
+                    <Page />
                 </Box>
             </Box>
         </Container>

@@ -1,4 +1,4 @@
-// components/Content.js
+// components/Page.js
 import * as React from 'react';
 import { Box, Container, Grid, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -9,7 +9,7 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const Content = () => {
+const Page = () => {
     return (
         <Container maxWidth="lg">
             <Box sx={{ flexGrow: 1, mt: 4 }}>
@@ -50,4 +50,4 @@ const Content = () => {
     );
 };
 
-export default Content;
+export default Page;

@@ -3,7 +3,6 @@ import * as React from 'react';
 import {
     Divider,
     Drawer,
-    LinearProgress,
     List,
     ListItem,
     ListItemButton,
@@ -15,6 +14,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonIcon from '@mui/icons-material/Person';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import SportsGymnasticsIcon from '@mui/icons-material/SportsGymnastics';
+import {useRouter} from "next/navigation";
 
 const SidebarContainer = styled(Drawer)(({ theme }) => ({
     width: 240,
@@ -49,9 +49,15 @@ const SidebarItem = styled(ListItem)(({ theme }) => ({
 
 const Sidebar = () => {
     const [selectedIndex, setSelectedIndex] = React.useState(0);
-
+    const contentLinks = [
+        "",
+        "/content/botManage",
+        "/content/appManage"
+    ];
     const handleListItemClick = (event, index) => {
         setSelectedIndex(index);
+        const router = useRouter();
+        router.push(contentLinks[index]);
     };
 
     return (
