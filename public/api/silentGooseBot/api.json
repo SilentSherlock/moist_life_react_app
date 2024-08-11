@@ -1,5 +1,6 @@
 {
   "botStart": "/botStart",
   "appStart": "/appStart",
-  "login": "/login"
+  "login": "/login",
+  "getAllTgAccount": "/getAllTgAccount"
 }

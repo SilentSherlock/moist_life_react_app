@@ -15,6 +15,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import SportsGymnasticsIcon from '@mui/icons-material/SportsGymnastics';
 import {useRouter} from "next/navigation";
+import Link from "next/link";
 
 const SidebarContainer = styled(Drawer)(({ theme }) => ({
     width: 240,
@@ -54,10 +55,10 @@ const Sidebar = () => {
         "/content/botManage",
         "/content/appManage"
     ];
+    const router = useRouter();
     const handleListItemClick = (event, index) => {
         setSelectedIndex(index);
-        const router = useRouter();
-        router.push(contentLinks[index]);
+        // router.push(contentLinks[index]);
     };
 
     return (
@@ -85,16 +86,16 @@ const Sidebar = () => {
                 <SidebarItem
                     onClick={(event) => handleListItemClick(event, 1)}
                 >
-                    <ListItemButton selected={selectedIndex === 1}>
+                    <ListItemButton selected={selectedIndex === 1} component={Link}  href="/content/appManage" >
                         <ListItemIcon><PersonIcon style={{ color: selectedIndex === 1 ? '#282c34' : '#ffffff' }} /></ListItemIcon>
-                        <ListItemText primary="Telegram 用户" />
+                        <ListItemText primary="Telegram 账户" />
                     </ListItemButton>
 
                 </SidebarItem>
                 <SidebarItem
                     onClick={(event) => handleListItemClick(event, 2)}
                 >
-                    <ListItemButton selected={selectedIndex === 2}>
+                    <ListItemButton selected={selectedIndex === 2} component={Link} href="/content/botManage" >
                         <ListItemIcon><TableChartIcon style={{ color: selectedIndex === 2 ? '#282c34' : '#ffffff' }} /></ListItemIcon>
                         <ListItemText primary="Telegram 机器人" />
                     </ListItemButton>

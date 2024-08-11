@@ -1,4 +1,5 @@
 // components/Page.js
+"use client"
 import * as React from 'react';
 import { Box, Container, Grid, Paper, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
