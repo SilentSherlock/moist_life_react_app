@@ -8,10 +8,12 @@ export default class RequestAPI extends Component{
     constructor(props) {
         super(props);
         const urlMap = new Map();
+        console.log("Request API init");
         urlMap.set("dev", "http://localhost:8080");
+        console.log("Env ", process.env.NEXT_PUBLIC_APP_ENV);
         // urlMap.set("prd", "http://localhost:8080");
         const client = axios.create({
-            baseURL: urlMap.get(process.env.NODE_ENV),
+            baseURL: urlMap.get(process.env.NEXT_PUBLIC_APP_ENV),
             timeout: 10000
         });
 
@@ -37,9 +39,9 @@ export default class RequestAPI extends Component{
     }
 
     async post(url, data) {
+        console.log("baseUrl", this.state.client.defaults.baseURL);
         try {
-            this.state.client.setContentType("application/json");
-            let response = await this.state.client.post(url, data);
+            let response = await this.state.client.post(url, data, {headers: {"Content-Type": "application/json"}});
             if (response.status === 200) {
                 console.log("Post Success");
                 return response.data;
