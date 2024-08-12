@@ -42,7 +42,7 @@ const VerifyModal = ({ title, phone, open, accountState, handleClose, handleSubm
                     margin="normal"
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
-                    sx={{ display: ("0" === accountState ? "none" : "") }}
+                    sx={{ display: ("0" === accountState ? "none" : "block") }}
                 />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
                     <Button variant="contained" color="primary" onClick={onSubmit}>
