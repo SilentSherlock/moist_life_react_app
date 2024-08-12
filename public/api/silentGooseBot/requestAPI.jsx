@@ -38,10 +38,27 @@ export default class RequestAPI extends Component{
         }
     }
 
-    async post(url, data) {
+    async postJson(url, data) {
         console.log("baseUrl", this.state.client.defaults.baseURL);
         try {
             let response = await this.state.client.post(url, data, {headers: {"Content-Type": "application/json"}});
+            if (response.status === 200) {
+                console.log("Post Success");
+                return response.data;
+            } else {
+                console.log("Post Error %S", response.status);
+            }
+
+
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    async postForm(url, data) {
+        console.log("baseUrl", this.state.client.defaults.baseURL);
+        try {
+            let response = await this.state.client.post(url, data, {headers: {"Content-Type": "application/x-www-form-urlencoded"}});
             if (response.status === 200) {
                 console.log("Post Success");
                 return response.data;

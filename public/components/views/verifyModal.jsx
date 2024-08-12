@@ -1,11 +1,19 @@
 // components/VerifyModal.js
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 
-const VerifyModal = ({ title, phone, open, accountState, handleClose, handleSubmit }) => {
+const VerifyModal = ({ title, initPhone, open, accountState, handleClose, handleSubmit }) => {
+    console.log("initPhone ", initPhone)
     const [code, setCode] = useState('');
+    const [phone, setPhone] = useState(initPhone);
+    // todo 增加accountState的状态保存
+
+    useEffect(() => {
+        setPhone(initPhone);
+    },[initPhone]);
 
     const onSubmit = () => {
+        console.log("onSubmit phone %s code %s", phone, code);
         handleSubmit(phone, code);
     };
 
@@ -32,7 +40,7 @@ const VerifyModal = ({ title, phone, open, accountState, handleClose, handleSubm
                     variant="outlined"
                     fullWidth
                     margin="normal"
-                    value={phone}
+                    value={initPhone}
                     disabled={true}
                 />
                 <TextField
@@ -48,7 +56,7 @@ const VerifyModal = ({ title, phone, open, accountState, handleClose, handleSubm
                     <Button variant="contained" color="primary" onClick={onSubmit}>
                         提交
                     </Button>
-                    <Button variant="outlined" color="secondary" onClick={handleClose}>
+                    <Button variant="contained" color="secondary" onClick={handleClose}>
                         关闭
                     </Button>
                 </Box>

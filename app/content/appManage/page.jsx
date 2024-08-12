@@ -8,7 +8,6 @@ import {useEffect, useState} from "react";
 import {styled} from "@mui/material/styles";
 import UserCard from "../../../public/components/views/userCard";
 import VerifyModal from "../../../public/components/views/verifyModal";
-import {equal} from "node:assert";
 
 export default function AppModule() {
 
@@ -16,7 +15,9 @@ export default function AppModule() {
     const [tgAccounts, setTgAccounts] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [modalTitle, setModalTitle] = useState("WaitCode");
-    const [accountState, setAccountState] = useState([]);
+    const [phone, setPhone] = useState("");
+    const [accountStates, setAccountStates] = useState([]);
+    const [curCardIndex, setCurCardIndex] = useState(0);
 
     // 初始化组件状态
     useEffect(() => {
@@ -26,12 +27,12 @@ export default function AppModule() {
     // 获取账户信息
     function getTdAccount() {
         let request = new RequestAPI();
-        request.post(api.getAllTgAccount, {})
+        request.postJson(api.getAllTgAccount, {})
             .then(result => {
                 if (Status.SUCCESS === result.status) {
                     setTgAccounts(result.resultMap.tgAccounts);
-                    console.log("get tgAccounts %d", tgAccounts.length);
-                    setAccountState(new Array(tgAccounts.length).fill("0"));
+                    console.log("get tgAccounts %d", result.resultMap.tgAccounts.length);
+                    setAccountStates(new Array(result.resultMap.tgAccounts.length).fill("0"));
                 } else if (Status.FALSE === result.status) {
                     console.log("获取用户列表失败");
                 }
@@ -47,10 +48,11 @@ export default function AppModule() {
     }));
 
     // 登录账号
-    function cardLogin() {
+    function cardLogin(phone, curAccountIndex) {
         // todo 修改card显示的字样状态
         setModalOpen(true);
-
+        setPhone(phone);
+        setCurCardIndex(curAccountIndex);
     }
 
     function handleModalLogin(phone, code, password) {
@@ -58,6 +60,8 @@ export default function AppModule() {
         // todo 调整card显示的字样状态
         let request = new RequestAPI();
         let curCardIndex = null;
+
+        console.log("phone %s code %s password %s", phone, code, password);
         tgAccounts.forEach((account, index) => {
             if (account.phone === phone) curCardIndex = index;
         });
@@ -65,17 +69,25 @@ export default function AppModule() {
             console.error("未获取到当前卡片的index %s phone %s", curCardIndex, phone);
             return;
         }
-        request.post(api.appStart, {
+        request.postForm(api.appStart, {
             phone: phone,
             waitCode: code,
             waitPassword: password,
-            state: accountState[curCardIndex]
+            state: accountStates[curCardIndex]
         }).then(result => {
-            if (Status.SUCCESS === result.resultMap.status) {
+            if (Status.SUCCESS === result.status) {
                 // 需要输入验证码
                 if ("1" === result.resultMap.state) {
-                    // todo
+                    setModalTitle("WaitCode");
+                    accountStates[curCardIndex] = "1";
+                    setAccountStates(accountStates);
+                } else if ("2" === result.resultMap.status) {
+                    setModalTitle("WaitPassword");
+                    accountStates[curCardIndex] = "2";
+                    setAccountStates(accountStates);
                 }
+            } else {
+                console.log("Request login failed");
             }
         })
     }
@@ -84,20 +96,20 @@ export default function AppModule() {
         <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{xs: 4, sm: 8, md: 12}} >
                 {
-                    tgAccounts.map(account => (
-                        <Grid item xs={2} sm={4} md={4} >
+                    tgAccounts.map((account, curAccountIndex) => (
+                        <Grid item xs={2} sm={4} md={4} key={curAccountIndex}>
                             <AccountCard
                                 imageUrl={account.imageUrl}
                                 avatarName={account.avatarName}
                                 username={account.username}
                                 phone={account.phone}
-                                onClickLogin={cardLogin}
+                                onClickLogin={() => cardLogin(account.phone, curAccountIndex)}
                             />
                         </Grid>
                     ))
                 }
             </Grid>
-            <VerifyModal open={modalOpen} title={modalTitle}>
+            <VerifyModal open={modalOpen} title={modalTitle} initPhone={phone} accountState={accountStates[curCardIndex]} handleSubmit={handleModalLogin}>
             </VerifyModal>
         </Box>
     );

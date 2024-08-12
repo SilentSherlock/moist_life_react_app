@@ -23,7 +23,7 @@ export default function LoginPage() {
         // 简单的登录逻辑
         if (email && password) {
             let request = new RequestAPI();
-            request.post(api.login, {
+            request.postJson(api.login, {
                 email: email,
                 password: password
             }).then(function (result) {
