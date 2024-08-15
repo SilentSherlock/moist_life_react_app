@@ -2,15 +2,18 @@
 import React, {useEffect, useState} from 'react';
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 
-const VerifyModal = ({ title, initPhone, open, accountState, handleClose, handleSubmit }) => {
+const VerifyModal = ({ title, initPhone, initOpen, accountState, handleClose, handleSubmit }) => {
     console.log("initPhone ", initPhone)
     const [code, setCode] = useState('');
     const [phone, setPhone] = useState(initPhone);
+    const [accountState, setAccountState] = useState()
+    const [open, setOpen] = useState(initOpen)
     // todo 增加accountState的状态保存
 
     useEffect(() => {
         setPhone(initPhone);
-    },[initPhone]);
+        setAccountState(accountState)
+    },[initPhone, accountState]);
 
     const onSubmit = () => {
         console.log("onSubmit phone %s code %s", phone, code);
@@ -56,7 +59,7 @@ const VerifyModal = ({ title, initPhone, open, accountState, handleClose, handle
                     <Button variant="contained" color="primary" onClick={onSubmit}>
                         提交
                     </Button>
-                    <Button variant="contained" color="secondary" onClick={handleClose}>
+                    <Button variant="contained" color="secondary" onClick={()=>setOpen(false)}>
                         关闭
                     </Button>
                 </Box>

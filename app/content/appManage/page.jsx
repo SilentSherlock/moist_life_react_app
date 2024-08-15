@@ -76,15 +76,21 @@ export default function AppModule() {
             state: accountStates[curCardIndex]
         }).then(result => {
             if (Status.SUCCESS === result.status) {
-                // 需要输入验证码
                 if ("1" === result.resultMap.state) {
+                    // 需要输入验证码
                     setModalTitle("WaitCode");
                     accountStates[curCardIndex] = "1";
                     setAccountStates(accountStates);
-                } else if ("2" === result.resultMap.status) {
+                } else if ("2" === result.resultMap.state) {
+                    // 需要输入两步验证码
                     setModalTitle("WaitPassword");
                     accountStates[curCardIndex] = "2";
                     setAccountStates(accountStates);
+                } else if ("3" === result.resultMap.state) {
+                    // 已登录成功
+                    setModalOpen(false);
+                    console.log("login success");
+                    // todo 跳转到该账号管理页面
                 }
             } else {
                 console.log("Request login failed");
