@@ -1,10 +1,10 @@
 "use client"
 
-import {Box, Grid} from "@mui/material";
+import {Box, Button, Grid} from "@mui/material";
 import RequestAPI from "../../../public/api/silentGooseBot/requestAPI";
 import api from "../../../public/api/silentGooseBot/api" assert {type: "json"}
 import Status from "../../../public/api/Status";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {styled} from "@mui/material/styles";
 import UserCard from "../../../public/components/views/userCard";
 import VerifyModal from "../../../public/components/views/verifyModal";
@@ -27,16 +27,32 @@ export default function AppModule() {
     // 获取账户信息
     function getTdAccount() {
         let request = new RequestAPI();
-        request.postJson(api.getAllTgAccount, {})
-            .then(result => {
-                if (Status.SUCCESS === result.status) {
-                    setTgAccounts(result.resultMap.tgAccounts);
-                    console.log("get tgAccounts %d", result.resultMap.tgAccounts.length);
-                    setAccountStates(new Array(result.resultMap.tgAccounts.length).fill("0"));
-                } else if (Status.FALSE === result.status) {
-                    console.log("获取用户列表失败");
-                }
-            });
+
+        if (process.env.NEXT_PUBLIC_APP_ENV === "test") {
+            let testTgAccounts = [];
+            let testResultJson = {
+                imageUrl: "",
+                avatarName: "Sherlock",
+                username: "@Sherlock",
+                phone: "+12345678"
+            }
+            testTgAccounts.push(testResultJson);
+            setTgAccounts(testTgAccounts);
+            setAccountStates(new Array(testTgAccounts.length).fill("0"));
+
+        } else {
+            request.postJson(api.getAllTgAccount, {})
+                .then(result => {
+                    if (Status.SUCCESS === result.status) {
+                        setTgAccounts(result.resultMap.tgAccounts);
+                        console.log("get tgAccounts %d", result.resultMap.tgAccounts.length);
+                        setAccountStates(new Array(result.resultMap.tgAccounts.length).fill("0"));
+                    } else if (Status.FALSE === result.status) {
+                        console.log("获取用户列表失败");
+                    }
+                });
+        }
+
     }
 
     const AccountCard = styled(UserCard)(({theme}) => ({
@@ -50,9 +66,11 @@ export default function AppModule() {
     // 登录账号
     function cardLogin(phone, curAccountIndex) {
         // todo 修改card显示的字样状态
+        console.log("cardLogin")
         setModalOpen(true);
         setPhone(phone);
         setCurCardIndex(curAccountIndex);
+        handleModalLogin(phone, "", "");
     }
 
     function handleModalLogin(phone, code, password) {
@@ -61,7 +79,6 @@ export default function AppModule() {
         let request = new RequestAPI();
         let curCardIndex = null;
 
-        console.log("phone %s code %s password %s", phone, code, password);
         tgAccounts.forEach((account, index) => {
             if (account.phone === phone) curCardIndex = index;
         });
@@ -69,33 +86,57 @@ export default function AppModule() {
             console.error("未获取到当前卡片的index %s phone %s", curCardIndex, phone);
             return;
         }
-        request.postForm(api.appStart, {
-            phone: phone,
-            waitCode: code,
-            waitPassword: password,
-            state: accountStates[curCardIndex]
-        }).then(result => {
-            if (Status.SUCCESS === result.status) {
-                if ("1" === result.resultMap.state) {
-                    // 需要输入验证码
+        console.log("phone %s code %s password %s state %s", phone, code, password, accountStates[curCardIndex]);
+
+        if (process.env.NEXT_PUBLIC_APP_ENV === "test") {
+
+            switch (accountStates[curCardIndex]) {
+                case "0":
                     setModalTitle("WaitCode");
                     accountStates[curCardIndex] = "1";
                     setAccountStates(accountStates);
-                } else if ("2" === result.resultMap.state) {
-                    // 需要输入两步验证码
+                    break;
+                case "1":
                     setModalTitle("WaitPassword");
                     accountStates[curCardIndex] = "2";
                     setAccountStates(accountStates);
-                } else if ("3" === result.resultMap.state) {
-                    // 已登录成功
+                    break;
+                case "2":
+                    console.log("login successfully");
                     setModalOpen(false);
-                    console.log("login success");
-                    // todo 跳转到该账号管理页面
-                }
-            } else {
-                console.log("Request login failed");
+                    break;
+
             }
-        })
+
+        } else {
+            request.postForm(api.appStart, {
+                phone: phone,
+                waitCode: code,
+                waitPassword: password,
+                state: accountStates[curCardIndex]
+            }).then(result => {
+                if (Status.SUCCESS === result.status) {
+                    if ("1" === result.resultMap.state) {
+                        // 需要输入验证码
+                        setModalTitle("WaitCode");
+                        accountStates[curCardIndex] = "1";
+                        setAccountStates(accountStates);
+                    } else if ("2" === result.resultMap.state) {
+                        // 需要输入两步验证码
+                        setModalTitle("WaitPassword");
+                        accountStates[curCardIndex] = "2";
+                        setAccountStates(accountStates);
+                    } else if ("3" === result.resultMap.state) {
+                        // 已登录成功
+                        setModalOpen(false);
+                        console.log("login success");
+                        // todo 跳转到该账号管理页面
+                    }
+                } else {
+                    console.log("Request login failed");
+                }
+            })
+        }
     }
 
     return (
@@ -115,7 +156,10 @@ export default function AppModule() {
                     ))
                 }
             </Grid>
-            <VerifyModal open={modalOpen} title={modalTitle} initPhone={phone} accountState={accountStates[curCardIndex]} handleSubmit={handleModalLogin}>
+            <VerifyModal modalOpen={modalOpen} title={modalTitle} initPhone={phone} initAccountState={accountStates[curCardIndex]} handleSubmit={handleModalLogin}>
+                <Button variant="contained" color="secondary" onClick={() => {setModalOpen(false)}}>
+                    关闭
+                </Button>
             </VerifyModal>
         </Box>
     );

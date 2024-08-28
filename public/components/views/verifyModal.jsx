@@ -2,18 +2,17 @@
 import React, {useEffect, useState} from 'react';
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 
-const VerifyModal = ({ title, initPhone, initOpen, accountState, handleClose, handleSubmit }) => {
+const VerifyModal = ({ title, initPhone, modalOpen, initAccountState, handleClose, handleSubmit, children }) => {
     console.log("initPhone ", initPhone)
     const [code, setCode] = useState('');
     const [phone, setPhone] = useState(initPhone);
-    const [accountState, setAccountState] = useState()
-    const [open, setOpen] = useState(initOpen)
-    // todo 增加accountState的状态保存
+    const [accountState, setAccountState] = useState(initAccountState);
+
 
     useEffect(() => {
         setPhone(initPhone);
         setAccountState(accountState)
-    },[initPhone, accountState]);
+    },[modalOpen, initPhone, accountState]);
 
     const onSubmit = () => {
         console.log("onSubmit phone %s code %s", phone, code);
@@ -21,7 +20,7 @@ const VerifyModal = ({ title, initPhone, initOpen, accountState, handleClose, ha
     };
 
     return (
-        <Modal open={open} onClose={handleClose}>
+        <Modal open={modalOpen} onClose={handleClose}>
             <Box
                 sx={{
                     position: 'absolute',
@@ -59,9 +58,7 @@ const VerifyModal = ({ title, initPhone, initOpen, accountState, handleClose, ha
                     <Button variant="contained" color="primary" onClick={onSubmit}>
                         提交
                     </Button>
-                    <Button variant="contained" color="secondary" onClick={()=>setOpen(false)}>
-                        关闭
-                    </Button>
+                    {children}
                 </Box>
             </Box>
         </Modal>
