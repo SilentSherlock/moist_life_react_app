@@ -8,6 +8,7 @@ import React, {useEffect, useState} from "react";
 import {styled} from "@mui/material/styles";
 import UserCard from "../../../public/components/views/userCard";
 import VerifyModal from "../../../public/components/views/verifyModal";
+import {useRouter} from "next/navigation";
 
 export default function AppModule() {
 
@@ -18,6 +19,8 @@ export default function AppModule() {
     const [phone, setPhone] = useState("");
     const [accountStates, setAccountStates] = useState([]);
     const [curCardIndex, setCurCardIndex] = useState(0);
+
+    const router = useRouter();
 
     // 初始化组件状态
     useEffect(() => {
@@ -104,6 +107,8 @@ export default function AppModule() {
                 case "2":
                     console.log("login successfully");
                     setModalOpen(false);
+                    router.push("/content/appManage/dataView");
+
                     break;
 
             }
@@ -130,7 +135,7 @@ export default function AppModule() {
                         // 已登录成功
                         setModalOpen(false);
                         console.log("login success");
-                        // todo 跳转到该账号管理页面
+                        router.push("/content/appManage/dataView");
                     }
                 } else {
                     console.log("Request login failed");
