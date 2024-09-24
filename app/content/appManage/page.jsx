@@ -4,7 +4,7 @@ import {Box, Button, Grid} from "@mui/material";
 import RequestAPI from "../../../public/api/silentGooseBot/requestAPI";
 import api from "../../../public/api/silentGooseBot/api" assert {type: "json"}
 import Status from "../../../public/api/Status";
-import React, {useEffect, useState} from "react";
+import React, {createContext, useEffect, useState} from "react";
 import {styled} from "@mui/material/styles";
 import UserCard from "../../../public/components/views/userCard";
 import VerifyModal from "../../../public/components/views/verifyModal";
@@ -20,7 +20,9 @@ export default function AppModule() {
     const [accountStates, setAccountStates] = useState([]);
     const [curCardIndex, setCurCardIndex] = useState(0);
 
+
     const router = useRouter();
+    // const phoneContext = createContext();
 
     // 初始化组件状态
     useEffect(() => {
@@ -107,7 +109,12 @@ export default function AppModule() {
                 case "2":
                     console.log("login successfully");
                     setModalOpen(false);
-                    router.push("/content/appManage/dataView");
+                    router.push(
+                        "/content/appManage/dataView?phone=" + phone,
+                        {
+                            phone: phone
+                        }
+                    );
 
                     break;
 
