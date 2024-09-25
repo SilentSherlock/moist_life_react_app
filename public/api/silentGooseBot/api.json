@@ -2,5 +2,6 @@
   "botStart": "/botStart",
   "appStart": "/appStart",
   "login": "/login",
-  "getAllTgAccount": "/getAllTgAccount"
+  "getAllTgAccount": "/getAllTgAccount",
+  "getUserChats": "/getUserChats"
 }

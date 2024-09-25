@@ -110,7 +110,7 @@ export default function AppModule() {
                     console.log("login successfully");
                     setModalOpen(false);
                     router.push(
-                        "/content/appManage/dataView?phone=" + phone,
+                        "/content/appManage/dataView?curPhone=" + phone,
                         {
                             phone: phone
                         }
