@@ -1,10 +1,11 @@
 "use client"
 import React from "react";
 import {useRouter, useSearchParams} from "next/navigation";
-import {GridColDef} from "@mui/x-data-grid";
+import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import RequestAPI from "@/public/api/silentGooseBot/requestAPI";
 import api from "../../../../public/api/silentGooseBot/api.json" assert {type: "json"}
 import Status from "@/public/api/Status";
+import {Box, Divider, Paper, Stack, Table} from "@mui/material";
 
 
 interface pageProps {
@@ -22,11 +23,29 @@ const DataViewPage: React.FC<pageProps> = ({ phone }: pageProps) => {
     let userTableTuple = buildUserTableColAndRow(resultMap.get("userChats"));
     let channelTableTuple = buildChannelTableColAndRow(resultMap.get("channelChats"));
     let groupTableTuple = buildGroupTableColAndRow(resultMap.get("groupChats"));
+    let dataList = [userTableTuple, channelTableTuple, groupTableTuple];
 
+    const paginationModel = { page: 0, pageSize: 5};
 
     return (
         <div>
-            <h2>Phone: {curPhone}</h2>
+            <Stack
+                spacing={2}
+                divider={<Divider orientation="horizontal" flexItem />}>
+                {
+                    dataList.map((item) => (
+                        <Paper sx={{ height: 450, width: "100%" }}>
+                            <DataGrid
+                                columns={item[0]}
+                                rows={item[1]}
+                                initialState={{ pagination: {paginationModel} }}
+                                pageSizeOptions={[5, 10]}
+                                sx={{ border: 0 }}
+                            />
+                        </Paper>
+                    ))
+                }
+            </Stack>
         </div>
     )
 }
