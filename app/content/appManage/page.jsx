@@ -4,7 +4,7 @@ import {Box, Button, Grid} from "@mui/material";
 import RequestAPI from "../../../public/api/silentGooseBot/requestAPI";
 import api from "../../../public/api/silentGooseBot/api" assert {type: "json"}
 import Status from "../../../public/api/Status";
-import React, {useEffect, useState} from "react";
+import React, {createContext, useEffect, useState} from "react";
 import {styled} from "@mui/material/styles";
 import UserCard from "../../../public/components/views/userCard";
 import VerifyModal from "../../../public/components/views/verifyModal";
@@ -20,7 +20,9 @@ export default function AppModule() {
     const [accountStates, setAccountStates] = useState([]);
     const [curCardIndex, setCurCardIndex] = useState(0);
 
+
     const router = useRouter();
+    // const phoneContext = createContext();
 
     // 初始化组件状态
     useEffect(() => {
@@ -47,8 +49,9 @@ export default function AppModule() {
             request.postJson(api.getAllTgAccount, {})
                 .then(result => {
                     if (Status.SUCCESS === result.status) {
+                        console.log("get status %d", result.status);
+                        console.log("get tgAccounts %d", result.resultMap);
                         setTgAccounts(result.resultMap.tgAccounts);
-                        console.log("get tgAccounts %d", result.resultMap.tgAccounts.length);
                         setAccountStates(new Array(result.resultMap.tgAccounts.length).fill("0"));
                     } else if (Status.FALSE === result.status) {
                         console.log("获取用户列表失败");
@@ -107,7 +110,12 @@ export default function AppModule() {
                 case "2":
                     console.log("login successfully");
                     setModalOpen(false);
-                    router.push("/content/appManage/dataView");
+                    router.push(
+                        "/content/appManage/dataView?curPhone=" + phone,
+                        {
+                            phone: phone
+                        }
+                    );
 
                     break;
 
@@ -117,17 +125,20 @@ export default function AppModule() {
             request.postForm(api.appStart, {
                 phone: phone,
                 waitCode: code,
-                waitPassword: password,
+                waitPassword: code,
                 state: accountStates[curCardIndex]
             }).then(result => {
+                console.log("async result coming~")
                 if (Status.SUCCESS === result.status) {
                     if ("1" === result.resultMap.state) {
+                        console.log(result.description);
                         // 需要输入验证码
                         setModalTitle("WaitCode");
                         accountStates[curCardIndex] = "1";
                         setAccountStates(accountStates);
                     } else if ("2" === result.resultMap.state) {
                         // 需要输入两步验证码
+                        console.log(result.description);
                         setModalTitle("WaitPassword");
                         accountStates[curCardIndex] = "2";
                         setAccountStates(accountStates);
@@ -140,7 +151,7 @@ export default function AppModule() {
                 } else {
                     console.log("Request login failed");
                 }
-            })
+            });
         }
     }
 
