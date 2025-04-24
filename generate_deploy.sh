@@ -4,10 +4,13 @@
 
 TARGET_FOLDER="deploy_folder"
 
-# 检查是否存在目标文件夹
+# 检查是否存在目标文件夹,不存在则创建，存在则清空
 if [ ! -d "$TARGET_FOLDER" ]; then
   echo "目标文件夹不存在，正在创建..."
   mkdir "$TARGET_FOLDER"
+else
+  echo "目标文件夹已存在，正在清空..."
+  rm -rf "$TARGET_FOLDER"/*
 fi
 
 # 检查是否存在.next文件夹
@@ -25,7 +28,10 @@ cp package-lock.json "$TARGET_FOLDER"
 cp next.config.mjs "$TARGET_FOLDER"
 echo "复制完成"
 
-# 压缩目标文件夹为zip文件
-#echo "正在压缩文件..."
-#gzip -rf "${TARGET_FOLDER}" "${TARGET_FOLDER}.zip"
-#echo "压缩完成，文件名为${TARGET_FOLDER}.zip"
+# 压缩目标文件夹为tar.gz文件，包括.开头的文件夹
+
+
+echo "正在压缩文件..."
+cd "$TARGET_FOLDER" || exit
+tar -czvf "${TARGET_FOLDER}.tar.gz" .
+echo "压缩完成，文件名为${TARGET_FOLDER}.tar.gz"

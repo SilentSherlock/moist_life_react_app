@@ -36,3 +36,5 @@ yarn-error.log*
 next-env.d.ts
 /.idea/
 .env
+/deploy_folder/
+/deploy_folder.tar.gz
