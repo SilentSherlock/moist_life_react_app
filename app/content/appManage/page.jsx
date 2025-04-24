@@ -110,12 +110,12 @@ export default function AppModule() {
                 case "2":
                     console.log("login successfully");
                     setModalOpen(false);
-                    router.push(
-                        "/content/appManage/dataView?curPhone=" + phone,
-                        {
-                            phone: phone
-                        }
-                    );
+                    // router.push(
+                    //     "/content/appManage/dataView?curPhone=" + phone,
+                    //     {
+                    //         phone: phone
+                    //     }
+                    // );
 
                     break;
 
